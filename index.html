@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accès Image</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .container { padding: 20px; width: 100%; max-width: 500px; }
+    input {
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background: #222;
+      color: #fff;
+      width: 100%;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+    }
+    .hidden { display: none !important; }
+    .error { color: #ff4d4d; margin-top: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
 
+  <div class="container">
+    <!-- Formulaire -->
+    <div id="auth-box">
+      <h2 style="margin-bottom: 15px;">Entrez le code d'accès</h2>
+      <input type="password" id="access-code" placeholder="Code secret">
+      <button onclick="checkCode()">Valider</button>
+      <p id="error-msg" class="error hidden">Code incorrect. Réessayez.</p>
+    </div>
+
+    <!-- Zone Image -->
+    <div id="image-box" class="hidden">
+      <img id="target-image" src="" alt="Image débloquée">
+    </div>
+  </div>
+
+  <script>
+    const SECRET_CODE = "REGARD2026";
+
+    function unlockContent() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const imgId = urlParams.get('img') || '1';
+      
+      document.getElementById('auth-box').classList.add('hidden');
+      document.getElementById('image-box').classList.remove('hidden');
+      document.getElementById('target-image').src = 'images/' + imgId + '.jpg';
+    }
+
+    function checkCode() {
+      const input = document.getElementById('access-code').value;
+      if (input === SECRET_CODE) {
+        localStorage.setItem('unlocked', 'true');
+        unlockContent();
+      } else {
+        document.getElementById('error-msg').classList.remove('hidden');
+      }
+    }
+
+    window.onload = function() {
+      if (localStorage.getItem('unlocked') === 'true') {
+        unlockContent();
+      }
+    };
+  </script>
+
+</body>
+</html>
